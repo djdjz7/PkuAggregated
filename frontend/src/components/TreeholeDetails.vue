@@ -15,6 +15,7 @@ const currentHole = ref<TreeholeSearchResultItem | null>();
 const currentHoleComments = ref<TreeholeComment[]>();
 const bgMaskRef = ref<HTMLDivElement>();
 const configStore = useConfigStore();
+const loadingComments = ref(false);
 
 const toggleCollapsed = (hole: TreeholeSearchResultItem | null) => {
   if (collapsed.value) {
@@ -40,10 +41,15 @@ onMounted(() => {
 });
 
 async function getTreeholeComments(pid: number) {
+  currentHoleComments.value = [];
+  loadingComments.value = true;
+
   var response = await client.get<TreeholeComment[]>(
     `/api/treehole/details/${pid}`
   );
   currentHoleComments.value = response.data;
+
+  loadingComments.value = false;
 }
 </script>
 
@@ -112,6 +118,9 @@ async function getTreeholeComments(pid: number) {
         </div>
         <div overflow-auto overscroll-contain md:p-l-2>
           <h3>评论</h3>
+          <div v-if="loadingComments">
+            少女祈祷中...
+          </div>
           <div flex="~ col" gap-2>
             <CommentComponent
               v-for="comment in currentHoleComments"
