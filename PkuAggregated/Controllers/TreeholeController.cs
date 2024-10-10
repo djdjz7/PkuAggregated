@@ -52,7 +52,7 @@ namespace PkuAggregated.Controllers
             if (response?.data is null)
                 throw new Exception("Unknown error: data is null");
             var tempList = new List<CommentData>(response.data.total);
-            tempList.AddRange(response.data.data);
+            tempList.AddRange(response.data.data ?? []);
             while (response.data?.next_page_url != null)
             {
                 response = await treehole.HttpClient.GetFromJsonAsync<TreeholeResponse<DetailsResponseData>>(response.data.next_page_url.Replace("http://treehole.pku.edu.cn/api/", ""));
