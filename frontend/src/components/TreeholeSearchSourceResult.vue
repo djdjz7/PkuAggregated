@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { LinkIcon, PhotoIcon } from "@heroicons/vue/24/outline";
-import { TreeholeSearchResultItem, TreeholeSearchResult } from "../models/TreeholeSearchResult";
+import {
+  TreeholeSearchResultItem,
+  TreeholeSearchResult,
+} from "../models/TreeholeSearchResult";
 import Expander from "./Expander.vue";
 import { inject, onMounted } from "vue";
+import SmsVerifyComponent from "./SmsVerifyComponent.vue";
 
 let openDetailsElement: (hole: TreeholeSearchResultItem) => void;
 onMounted(() => {
-  openDetailsElement = inject("openDetails") as (pid: TreeholeSearchResultItem) => void;
+  openDetailsElement = inject("openDetails") as (
+    pid: TreeholeSearchResultItem
+  ) => void;
 });
 defineProps<{
   result: TreeholeSearchResult | undefined;
@@ -31,10 +37,13 @@ function openDetails(hole: TreeholeSearchResultItem) {
       /></a>
     </template>
 
-    <div v-if="!result?.isSuccess" p-x-4 p-y-1 text-gray-500>
-      <span>未能成功完成搜索</span><br /><span
-        >错误消息：{{ result?.errorMessage }}</span
-      >
+    <div v-if="!result?.isSuccess" p-x-4 p-y-1>
+      <SmsVerifyComponent v-if="result?.errorMessage == 'NEED_SMS_VERIFY'" />
+      <div v-else text-gray-500>
+        <span>未能成功完成搜索</span><br /><span
+          >错误消息：{{ result?.errorMessage }}</span
+        >
+      </div>
     </div>
     <span p-x-4 p-y-1 text-gray-500 v-else-if="result.results.length === 0"
       >无匹配结果</span

@@ -7,6 +7,8 @@ import {
 } from "../models/TreeholeSearchResult";
 import { client } from "../client";
 import { useConfigStore } from "../stores/configStore";
+import CommentComponent from "./CommentComponent.vue";
+
 const collapsed = ref(true);
 const currentPid = ref(0);
 const currentHole = ref<TreeholeSearchResultItem | null>();
@@ -96,24 +98,25 @@ async function getTreeholeComments(pid: number) {
           <XMarkIcon class="h-6 w-6" />
         </button>
       </div>
-      <div flex="~ col" text-left flex-grow flex-shrink overflow-y-auto>
-        <p whitespace-pre text-wrap>{{ currentHole?.text }}</p>
-        <img
-          v-if="currentHole?.imageId && currentHole?.imageId != 0"
-          :src="`${configStore.host}api/treehole/image/${currentHole.imageId}`"
-        />
-        <div>
+      <span text-left text-gray-500 text-sm m-b-2>{{
+        new Date(currentHole?.time ?? "").toLocaleString()
+      }}</span>
+      <div text-left overflow-y-auto md:grid md:cols-2>
+        <div overflow-auto overscroll-contain md:p-r-2>
+          <p whitespace-pre text-wrap>{{ currentHole?.text }}</p>
+          <img
+            max-w-full
+            v-if="currentHole?.imageId && currentHole?.imageId != 0"
+            :src="`${configStore.host}api/treehole/image/${currentHole.imageId}`"
+          />
+        </div>
+        <div overflow-auto overscroll-contain md:p-l-2>
           <h3>评论</h3>
           <div flex="~ col" gap-2>
-            <div v-for="comment in currentHoleComments">
-              <span font-500>{{ comment.name }}</span>
-              <span text-gray-500 text-sm m-l-2>#{{ comment.cid }}</span>
-              <div v-if="comment.quote != null" m-1 p-1 rounded-md class="bg-gray/20">
-                <span font-500>{{ comment.quote.name_tag }}</span>
-                <p whitespace-pre text-wrap>{{ comment.quote.text }}</p>
-              </div>
-              <p whitespace-pre text-wrap>{{ comment.text }}</p>
-            </div>
+            <CommentComponent
+              v-for="comment in currentHoleComments"
+              :comment="comment"
+            />
           </div>
         </div>
       </div>

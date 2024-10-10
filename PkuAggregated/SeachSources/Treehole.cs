@@ -26,6 +26,10 @@ namespace PkuAggregated.SearchSources
                 {
                     await LoginAsync();
                 }
+                if (LoginStatus == LoginStatus.NeedSmsVerify)
+                {
+                    throw new Exception("NEED_SMS_VERIFY");
+                }
 
             BeginSearch:
                 var searchResponse = await HttpClient.GetFromJsonAsync<TreeholeResponse<SearchResponseData>>(
@@ -40,6 +44,12 @@ namespace PkuAggregated.SearchSources
                     LoginStatus = LoginStatus.NotLoggedIn;
                     await LoginAsync();
                     goto BeginSearch;
+                }
+
+                if (searchResponse.code == 40002)
+                {
+                    LoginStatus = LoginStatus.NeedSmsVerify;
+                    throw new Exception("NEED_SMS_VERIFY");
                 }
 
                 if (searchResponse.code != 20000)
