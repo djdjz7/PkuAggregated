@@ -1,0 +1,63 @@
+:root {
+  font-family: Inter, sans-serif;
+  font-feature-settings: "liga" 1, "calt" 1; /* fix for Chrome */
+  line-height: 1.5;
+  font-weight: 400;
+  font-size: 16px;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.card {
+  padding: 2em;
+}
+
+#app {
+  padding: 2em 1em 0 1em;
+  width: 100dvw;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  max-height: 100dvh;
+  box-sizing: border-box;
+}
+
+button {
+  --at-apply: border-none cursor-pointer "bg-gray/10" "hover:bg-gray/20" p-x-4
+    p-y-2 rounded-lg transition-all duration-200 text-unset;
+}
+
+input {
+  --at-apply: outline-none border-none "bg-gray/10" transition-all duration-200
+    rounded-lg p-x-4 p-y-2 "hover:bg-gray/20" "focus:bg-gray/20";
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+}
+
+@supports (font-variation-settings: normal) {
+  :root,
+  input {
+    font-family: InterVariable, sans-serif;
+  }
+}

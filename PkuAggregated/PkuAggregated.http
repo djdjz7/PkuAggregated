@@ -1,0 +1,17 @@
+@PkuAggregated_HostAddress = http://localhost:5224
+
+GET {{PkuAggregated_HostAddress}}/api/search?keyword=»ÄÒ°»úÆ÷ÈË
+Accept: application/json
+
+###
+
+POST {{PkuAggregated_HostAddress}}/api/treehole/send-msg
+
+###
+
+POST {{PkuAggregated_HostAddress}}/api/treehole/verify
+Content-Type: application/json
+
+"870889"
+
+###
