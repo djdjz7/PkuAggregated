@@ -1,6 +1,7 @@
 export interface SearchSourceInfo {
   name: string;
   url: string;
+  id: string
 }
 
 export interface SearchResult {

@@ -8,12 +8,13 @@ namespace PkuAggregated.SearchSources
     public class Treehole
     {
         public HttpClient HttpClient { get; set; } =
-            new HttpClient() { BaseAddress = new Uri("https://treehole.pku.edu.cn/api/"), };
+            new HttpClient() { BaseAddress = new Uri("https://treehole.pku.edu.cn/api/") };
 
         private SearchSourceInfo _searchSourceInfo = new SearchSourceInfo
         {
             Name = "树洞",
             Url = "https://treehole.pku.edu.cn",
+            Id = "treehole",
         };
 
         public LoginStatus LoginStatus = LoginStatus.NotLoggedIn;
@@ -31,10 +32,10 @@ namespace PkuAggregated.SearchSources
                     throw new Exception("NEED_SMS_VERIFY");
                 }
 
-            BeginSearch:
-                var searchResponse = await HttpClient.GetFromJsonAsync<TreeholeResponse<SearchResponseData>>(
-                    $"pku_hole?page=1&limit=25&keyword={HttpUtility.UrlEncode(keyword)}"
-                );
+                BeginSearch:
+                var searchResponse = await HttpClient.GetFromJsonAsync<
+                    TreeholeResponse<SearchResponseData>
+                >($"pku_hole?page=1&limit=25&keyword={HttpUtility.UrlEncode(keyword)}");
 
                 if (searchResponse is null)
                     throw new Exception("搜索失败。请求返回 null");
@@ -53,7 +54,9 @@ namespace PkuAggregated.SearchSources
                 }
 
                 if (searchResponse.code != 20000)
-                    throw new Exception("搜索失败。" + Environment.NewLine + searchResponse.message);
+                    throw new Exception(
+                        "搜索失败。" + Environment.NewLine + searchResponse.message
+                    );
 
                 var results = searchResponse.data?.data ?? [];
                 var returnDataItems = results.Select(x => new TreeholeSearchResultItem
@@ -63,7 +66,7 @@ namespace PkuAggregated.SearchSources
                     Time = DateTime.UnixEpoch.AddSeconds(x.timestamp).ToLocalTime(),
                     ImageId = x.type == "image" ? x.pid : null,
                     CommentCount = x.reply,
-                    StartCount = x.likenum
+                    StartCount = x.likenum,
                 });
 
                 return new TreeholeSearchResult
@@ -89,7 +92,7 @@ namespace PkuAggregated.SearchSources
         {
             var response = await HttpClient.PostAsJsonAsync(
                 "login",
-                new { uid = Params.Username, password = Params.Password, }
+                new { uid = Params.Username, password = Params.Password }
             );
 
             var result = await response.Content.ReadFromJsonAsync<

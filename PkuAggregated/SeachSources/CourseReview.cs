@@ -25,7 +25,8 @@ namespace PkuAggregated.SearchSources
                     SourceInfo = new SearchSourceInfo
                     {
                         Name = "课程测评",
-                        Url = "https://courses.pinzhixiaoyuan.com/"
+                        Url = "https://courses.pinzhixiaoyuan.com/",
+                        Id = "course-review"
                     },
                     Results = data
                         .cDatas.Where(x =>

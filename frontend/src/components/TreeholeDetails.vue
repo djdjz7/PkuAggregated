@@ -74,6 +74,7 @@ async function getTreeholeComments(pid: number) {
       md:h-80vh
       rounded="lt-lg rt-lg"
       bg-light-1
+      dark:bg-dark-1
       transition-all
       duration-400
       ease-in-out
@@ -104,7 +105,7 @@ async function getTreeholeComments(pid: number) {
           <XMarkIcon class="h-6 w-6" />
         </button>
       </div>
-      <span text-left text-gray-500 text-sm m-b-2>{{
+      <span text-left text-gray-500 dark:text-gray-400 text-sm m-b-2>{{
         new Date(currentHole?.time ?? "").toLocaleString()
       }}</span>
       <div text-left overflow-y-auto md:grid md:cols-2>
@@ -116,12 +117,15 @@ async function getTreeholeComments(pid: number) {
             :src="`${configStore.host}api/treehole/image/${currentHole.imageId}`"
           />
         </div>
-        <div overflow-auto overscroll-contain md:p-l-2>
+        <div overflow-auto overscroll-contain md:p-l-2 p-b-2>
           <h3>评论</h3>
           <div v-if="loadingComments">
             少女祈祷中...
           </div>
-          <div flex="~ col" gap-2>
+          <div v-else-if="!currentHoleComments ||currentHoleComments.length === 0">
+            暂无评论
+          </div>
+          <div v-else flex="~ col" gap-2>
             <CommentComponent
               v-for="comment in currentHoleComments"
               :comment="comment"

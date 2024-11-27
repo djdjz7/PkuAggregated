@@ -18,7 +18,8 @@ namespace PkuAggregated.SearchSources
         private SearchSourceInfo _sourceInfo = new SearchSourceInfo
         {
             Name = "门户应用",
-            Url = "https://portal.pku.edu.cn/"
+            Url = "https://portal.pku.edu.cn/",
+            Id = "portal-apps",
         };
 
         public PortalApps(IHttpContextAccessor httpContext)
@@ -59,9 +60,9 @@ namespace PkuAggregated.SearchSources
 
         public async Task SsoLoginAsync(string token)
         {
-            _ = await _httpClient.GetAsync(
-                $"https://portal.pku.edu.cn/portal2017/ssoLogin.do?token={token}"
-            );
+            var response = await _httpClient.GetAsync("https://portal.pku.edu.cn/portal2017");
+            var content = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(content);
         }
 
         public async Task<SearchResult> SearchAsync(string keyword)
@@ -73,7 +74,6 @@ namespace PkuAggregated.SearchSources
                     throw new Exception("未能获取请求信息。");
                 var host = request.Host;
                 var scheme = request.Scheme;
-            BeginSearch:
                 if (!IsLoggedIn)
                 {
                     var token = await LoginAsync(Params.Username, Params.Password);
@@ -87,8 +87,10 @@ namespace PkuAggregated.SearchSources
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     IsLoggedIn = false;
-                    goto BeginSearch;
+                    Console.WriteLine("No Auth!");
                 }
+
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
 
                 var body =
                     await response.Content.ReadFromJsonAsync<PortalAppSearchResult>()
@@ -128,7 +130,7 @@ namespace PkuAggregated.SearchSources
         public string? token { get; set; }
         public Error? errors { get; set; }
     }
-
+#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 "required" 修饰符或声明为可为 null。
     public class PortalAppSearchResult
     {
         public bool success { get; set; }
@@ -159,3 +161,4 @@ namespace PkuAggregated.SearchSources
         public string msg { get; set; }
     }
 }
+#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑添加 "required" 修饰符或声明为可为 null。

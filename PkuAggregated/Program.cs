@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using PkuAggregated.Interfaces;
 using PkuAggregated.Models;
+using PkuAggregated.SeachSources;
 using PkuAggregated.SearchSources;
 
 namespace PkuAggregated
@@ -41,10 +42,11 @@ namespace PkuAggregated
                 });
 
             builder.Services.AddSingleton<Treehole>();
-            builder.Services.AddSingleton<PortalApps>();
-            builder.Services.AddSingleton<ISearchSource, PortalApps>(
-                (provider) => provider.GetService<PortalApps>()!
-            );
+            builder.Services.AddSingleton<ISearchSource, Bbs>();
+            // builder.Services.AddSingleton<PortalApps>();
+            // builder.Services.AddSingleton<ISearchSource, PortalApps>(
+            //     (provider) => provider.GetService<PortalApps>()!
+            // );
             builder.Services.AddSingleton<ISearchSource, CourseReview>();
             builder.Services.AddSingleton<ISearchSource, PortalDepartmentNotices>();
             builder.Services.AddSingleton<ISearchSource, PortalSchoolNotices>();
@@ -53,9 +55,13 @@ namespace PkuAggregated
                 builder.Configuration["TokenGeneratorSource"]
                 ?? throw new Exception("No TokenGeneratorSource provided.");
             Params.Username =
-                builder.Configuration["AccountId"] ?? throw new Exception("No Username provided.");
+                builder.Configuration["AccountId"] ?? throw new Exception("No AccountId provided.");
             Params.Password =
                 builder.Configuration["Password"] ?? throw new Exception("No Password provided.");
+            Params.BbsUsername = 
+                builder.Configuration["BbsUsername"] ?? throw new Exception("No BbsUsername provided.");
+            Params.BbsPassword = 
+                builder.Configuration["BbsPassword"] ?? throw new Exception("No BbsPassword provided.");
 
             var app = builder.Build();
 
@@ -96,7 +102,6 @@ namespace PkuAggregated
                         await next();
                     }
                 );
-
             app.Run();
         }
     }

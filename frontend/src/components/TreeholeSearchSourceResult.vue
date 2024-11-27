@@ -30,6 +30,7 @@ function openDetails(hole: TreeholeSearchResultItem) {
         flex="~ items-center"
         text-unset
         :href="result?.sourceInfo.url"
+        id="treehole"
         decoration-none
         target="_blank"
         ><span>{{ result?.sourceInfo.name }}</span
@@ -39,13 +40,13 @@ function openDetails(hole: TreeholeSearchResultItem) {
 
     <div v-if="!result?.isSuccess" p-x-4 p-y-1>
       <SmsVerifyComponent v-if="result?.errorMessage == 'NEED_SMS_VERIFY'" />
-      <div v-else text-gray-500>
+      <div v-else text-gray-500 dark:text-gray-400>
         <span>未能成功完成搜索</span><br /><span
           >错误消息：{{ result?.errorMessage }}</span
         >
       </div>
     </div>
-    <span p-x-4 p-y-1 text-gray-500 v-else-if="result.results.length === 0"
+    <span p-x-4 p-y-1 text-gray-500 dark:text-gray-400 v-else-if="result.results.length === 0"
       >无匹配结果</span
     >
     <div
@@ -64,7 +65,7 @@ function openDetails(hole: TreeholeSearchResultItem) {
     >
       <div flex="~ items-center" gap-2 font-300>
         <span>#{{ item.pid }}</span>
-        <span text-gray-500 text-sm>{{
+        <span text-gray-500 dark:text-gray-400 text-sm>{{
           new Date(item.time).toLocaleString()
         }}</span>
       </div>
@@ -72,7 +73,7 @@ function openDetails(hole: TreeholeSearchResultItem) {
       <div
         v-if="item.imageId != undefined"
         flex="~ items-center"
-        text-gray-500
+        text-gray-500 dark:text-gray-400
         m-t-2
       >
         <PhotoIcon class="h-5 w-5" />

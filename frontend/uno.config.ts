@@ -6,6 +6,8 @@ import {
 } from "unocss";
 
 export default defineConfig({
-  presets: [presetUno(), presetAttributify()],
+  presets: [presetUno({
+    dark: 'media'
+  }), presetAttributify()],
   transformers: [transformerDirectives()],
 });

@@ -47,7 +47,9 @@ namespace PkuAggregated.Controllers
         )
         {
             var response = await treehole.HttpClient.GetFromJsonAsync<TreeholeResponse<DetailsResponseData>>($"pku_comment_v3/{pid}?page=1");
-            if (!response?.success ?? false)
+            if (response is null)
+                throw new Exception("Failed to fetch, response is null.");
+            if (!response.success)
                 throw new Exception("Unable to fetch comment:\n" + response.message);
             if (response?.data is null)
                 throw new Exception("Unknown error: data is null");
@@ -56,7 +58,9 @@ namespace PkuAggregated.Controllers
             while (response.data?.next_page_url != null)
             {
                 response = await treehole.HttpClient.GetFromJsonAsync<TreeholeResponse<DetailsResponseData>>(response.data.next_page_url.Replace("http://treehole.pku.edu.cn/api/", ""));
-                if (!response?.success ?? false)
+                if (response is null)
+                    throw new Exception("Failed to fetch, response is null.");
+                if (!response.success)
                     throw new Exception("Unable to fetch comment:\n" + response.message);
                 if (response?.data is null)
                     throw new Exception("Unknown error: data is null");

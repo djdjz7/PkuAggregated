@@ -9,6 +9,7 @@
     {
         required public string Name { get; set; }
         required public string Url { get; set; }
+        required public string Id { get; set; }
     }
 
     public class SearchResult

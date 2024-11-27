@@ -37,7 +37,8 @@ namespace PkuAggregated.SearchSources
                     SourceInfo = new SearchSourceInfo
                     {
                         Name = "单位公告",
-                        Url = "https://portal.pku.edu.cn/portal2017/#/deptNotices/1/ALL"
+                        Url = "https://portal.pku.edu.cn/portal2017/#/deptNotices/1/ALL",
+                        Id = "portal-depart-notices"
                     }
                 };
             }
@@ -51,7 +52,8 @@ namespace PkuAggregated.SearchSources
                     SourceInfo = new SearchSourceInfo
                     {
                         Name = "单位公告",
-                        Url = "https://portal.pku.edu.cn/portal2017/#/deptNotices/1/ALL"
+                        Url = "https://portal.pku.edu.cn/portal2017/#/deptNotices/1/ALL",
+                        Id = "portal-depart-notices",
                     }
                 };
             }

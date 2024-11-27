@@ -29,7 +29,6 @@ body {
 #app {
   padding: 2em 1em 0 1em;
   width: 100dvw;
-  max-width: 600px;
   margin: 0 auto;
   text-align: center;
   display: flex;
