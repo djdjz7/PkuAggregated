@@ -31,8 +31,8 @@ namespace PkuAggregated.SearchSources
                 {
                     throw new Exception("NEED_SMS_VERIFY");
                 }
-
-                BeginSearch:
+                bool hasRetried = false;
+            BeginSearch:
                 var searchResponse = await HttpClient.GetFromJsonAsync<
                     TreeholeResponse<SearchResponseData>
                 >($"pku_hole?page=1&limit=25&keyword={HttpUtility.UrlEncode(keyword)}");
@@ -40,11 +40,16 @@ namespace PkuAggregated.SearchSources
                 if (searchResponse is null)
                     throw new Exception("搜索失败。请求返回 null");
 
-                if (searchResponse.code == 40001)
+                if (searchResponse.code == 40001 && !hasRetried)
                 {
                     LoginStatus = LoginStatus.NotLoggedIn;
+                    hasRetried = true;
                     await LoginAsync();
                     goto BeginSearch;
+                }
+                if (searchResponse.code == 40001 && hasRetried)
+                {
+                    throw new Exception("登录失效且未能重试登录。");
                 }
 
                 if (searchResponse.code == 40002)
