@@ -11,7 +11,7 @@ function save() {
 </script>
 
 <template>
-  <div flex="~ col gap-2">
+  <div flex="~ col gap-2" w-40em mx-auto style="max-width: calc(100vw - 2em);">
     <input v-model="host" placeholder="Host" />
     <input v-model="verificationToken" placeholder="Verification Token" />
     <button @click="save">OK</button>
