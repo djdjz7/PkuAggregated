@@ -43,10 +43,13 @@ namespace PkuAggregated.Controllers
         [HttpGet]
         [Route("details/{pid}")]
         public async Task<CommentData[]> GetTreeholeDetails(
-            [FromRoute] string pid, [FromServices] Treehole treehole
+            [FromRoute] string pid,
+            [FromServices] Treehole treehole
         )
         {
-            var response = await treehole.HttpClient.GetFromJsonAsync<TreeholeResponse<DetailsResponseData>>($"pku_comment_v3/{pid}?page=1");
+            var response = await treehole.HttpClient.GetFromJsonAsync<
+                TreeholeResponse<DetailsResponseData>
+            >($"pku_comment_v3/{pid}?page=1");
             if (response is null)
                 throw new Exception("Failed to fetch, response is null.");
             if (!response.success)
@@ -57,7 +60,9 @@ namespace PkuAggregated.Controllers
             tempList.AddRange(response.data.data ?? []);
             while (response.data?.next_page_url != null)
             {
-                response = await treehole.HttpClient.GetFromJsonAsync<TreeholeResponse<DetailsResponseData>>(response.data.next_page_url.Replace("http://treehole.pku.edu.cn/api/", ""));
+                response = await treehole.HttpClient.GetFromJsonAsync<
+                    TreeholeResponse<DetailsResponseData>
+                >(response.data.next_page_url.Replace("http://treehole.pku.edu.cn/api/", ""));
                 if (response is null)
                     throw new Exception("Failed to fetch, response is null.");
                 if (!response.success)

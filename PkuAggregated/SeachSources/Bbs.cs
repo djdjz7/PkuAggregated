@@ -13,7 +13,7 @@ public class Bbs : ISearchSource
     {
         Name = "未名 BBS",
         Url = "https://bbs.pku.edu.cn/",
-        Id = "bbs"
+        Id = "bbs",
     };
     private HttpClient _httpClient = new() { BaseAddress = new Uri("https://bbs.pku.edu.cn/") };
 
@@ -21,8 +21,6 @@ public class Bbs : ISearchSource
     {
         try
         {
-
-
             if (!_loggedIn)
             {
                 await LoginAsync(Params.BbsUsername, Params.BbsPassword);
@@ -34,7 +32,9 @@ public class Bbs : ISearchSource
             var html = await repsonse.Content.ReadAsStringAsync();
             HtmlParser htmlParser = new HtmlParser();
             var document = await htmlParser.ParseAsync(html);
-            var blocks = document.QuerySelectorAll("#page-search > .search-result > .block.post-block");
+            var blocks = document.QuerySelectorAll(
+                "#page-search > .search-result > .block.post-block"
+            );
             var results = new List<SearchResultItem>();
             foreach (var block in blocks)
             {
@@ -42,21 +42,25 @@ public class Bbs : ISearchSource
                 var fullLink = new Uri(new Uri("https://bbs.pku.edu.cn/v2/"), link).ToString();
                 var title = block.QuerySelector(".title").TextContent.Trim();
                 var from = block.QuerySelector(".from").TextContent.Trim();
-                var briefList = block.QuerySelectorAll(".brief a").Select(x=>x.TextContent.Trim());
+                var briefList = block
+                    .QuerySelectorAll(".brief a")
+                    .Select(x => x.TextContent.Trim());
                 var brief = string.Join(Environment.NewLine, briefList);
                 var name = block.QuerySelector(".name").TextContent.Trim();
-                results.Add(new SearchResultItem()
-                {
-                    Title = title,
-                    Description = brief,
-                    Url = fullLink,
-                });
+                results.Add(
+                    new SearchResultItem()
+                    {
+                        Title = title,
+                        Description = brief,
+                        Url = fullLink,
+                    }
+                );
             }
             return new SearchResult()
             {
                 IsSuccess = true,
                 SourceInfo = _sourceInfo,
-                Results = results
+                Results = results,
             };
         }
         catch (Exception ex)
@@ -66,7 +70,7 @@ public class Bbs : ISearchSource
                 IsSuccess = false,
                 ErrorMessage = ex.Message,
                 SourceInfo = _sourceInfo,
-                Results = []
+                Results = [],
             };
         }
     }

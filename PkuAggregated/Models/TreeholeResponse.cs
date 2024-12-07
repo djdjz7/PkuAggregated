@@ -1,6 +1,5 @@
 ﻿namespace PkuAggregated.Models
 {
-
     public class TreeholeResponse<T>
     {
         public int code { get; set; }
@@ -14,7 +13,6 @@
     {
         public string jwt { get; set; }
     }
-
 
     public class SearchResponseData
     {
@@ -77,8 +75,6 @@
         public int total { get; set; }
     }
 
-
-
     public class CommentData
     {
         public int cid { get; set; }
@@ -91,12 +87,10 @@
         public QuoteData? quote { get; set; }
     }
 
-
     public class QuoteData
     {
         public int pid { get; set; }
         public string text { get; set; }
         public string name_tag { get; set; }
     }
-
 }

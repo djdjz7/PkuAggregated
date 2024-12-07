@@ -16,5 +16,4 @@
         public string Number { get; set; }
         public string DocUrl { get; set; }
     }
-
 }

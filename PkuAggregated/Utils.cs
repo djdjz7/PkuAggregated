@@ -7,7 +7,8 @@ namespace PkuAggregated
     {
         public static bool VerifyToken(string token, DateTime requestTime)
         {
-            if(Math.Abs((DateTime.Now - requestTime).TotalSeconds) > 20) return false;
+            if (Math.Abs((DateTime.Now - requestTime).TotalSeconds) > 20)
+                return false;
             string currentDate = requestTime.ToString("yyyyMMddHHmmss");
             string combinedString = currentDate + Params.TokenGeneratorSource;
             var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes(combinedString));

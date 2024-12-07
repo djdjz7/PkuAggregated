@@ -26,7 +26,7 @@ namespace PkuAggregated.SearchSources
                     {
                         Name = "课程测评",
                         Url = "https://courses.pinzhixiaoyuan.com/",
-                        Id = "course-review"
+                        Id = "course-review",
                     },
                     Results = data
                         .cDatas.Where(x =>
@@ -38,10 +38,10 @@ namespace PkuAggregated.SearchSources
                             {
                                 Title = x.name,
                                 Description = x.department,
-                                Url = $"https://courses.pinzhixiaoyuan.com/courses/view/{x.id}"
+                                Url = $"https://courses.pinzhixiaoyuan.com/courses/view/{x.id}",
                             };
                         })
-                        .ToList()
+                        .ToList(),
                 }
             );
         }

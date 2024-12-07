@@ -42,7 +42,7 @@ namespace PkuAggregated.SearchSources
                         KeyValuePair.Create(
                             "redirUrl",
                             "https://portal.pku.edu.cn/portal2017/ssoLogin.do"
-                        )
+                        ),
                     ]
                 )
             );
@@ -108,7 +108,7 @@ namespace PkuAggregated.SearchSources
                 {
                     IsSuccess = true,
                     Results = data?.ToList() ?? [],
-                    SourceInfo = _sourceInfo
+                    SourceInfo = _sourceInfo,
                 };
             }
             catch (Exception e)
@@ -118,7 +118,7 @@ namespace PkuAggregated.SearchSources
                     IsSuccess = false,
                     ErrorMessage = e.Message,
                     SourceInfo = _sourceInfo,
-                    Results = []
+                    Results = [],
                 };
             }
         }
