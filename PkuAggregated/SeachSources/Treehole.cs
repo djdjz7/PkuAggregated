@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Web;
 using PkuAggregated.Interfaces;
 using PkuAggregated.Models;
@@ -9,6 +10,8 @@ namespace PkuAggregated.SearchSources
     {
         public HttpClient HttpClient { get; set; } =
             new HttpClient() { BaseAddress = new Uri("https://treehole.pku.edu.cn/api/") };
+
+        private Regex PidRegex = new(@"^#(\d+)$");
 
         private SearchSourceInfo _searchSourceInfo = new SearchSourceInfo
         {
@@ -21,6 +24,7 @@ namespace PkuAggregated.SearchSources
 
         public async Task<TreeholeSearchResult> SearchAsync(string keyword)
         {
+            keyword = keyword.Trim();
             try
             {
                 if (LoginStatus == LoginStatus.NotLoggedIn)
@@ -33,9 +37,19 @@ namespace PkuAggregated.SearchSources
                 }
                 bool hasRetried = false;
             BeginSearch:
-                var searchResponse = await HttpClient.GetFromJsonAsync<
-                    TreeholeResponse<SearchResponseData>
-                >($"pku_hole?page=1&limit=25&keyword={HttpUtility.UrlEncode(keyword)}");
+                TreeholeResponse<SearchResponseData>? searchResponse = null;
+                var matches = PidRegex.Matches(keyword);
+                if (matches.Count > 0)
+                {
+                    var pid = matches[0].Groups[1].Value;
+                    searchResponse = await HttpClient.GetFromJsonAsync<
+                        TreeholeResponse<SearchResponseData>
+                    >($"pku_hole?page=1&limit=25&pid={pid}");
+                }
+                else
+                    searchResponse = await HttpClient.GetFromJsonAsync<
+                        TreeholeResponse<SearchResponseData>
+                    >($"pku_hole?page=1&limit=25&keyword={HttpUtility.UrlEncode(keyword)}");
 
                 if (searchResponse is null)
                     throw new Exception("搜索失败。请求返回 null");
